@@ -1,0 +1,108 @@
+Sub ET36()
+
+
+
+    Dim i As Integer
+    Dim SCel As Range
+    Dim RowCnt As Integer
+    
+   
+    
+    Dim SCol As Range: Set SCol = Application.Range("B2:B5000")
+
+  
+  
+    RowCnt = 1
+  
+    
+    For i = 14001 To 17000
+            
+        Set SCel = Application.Range("B" & i)
+        SCel.Activate
+        
+        Debug.Print "SCel is: " & SCel.Address
+        
+        SCel.Offset(0, 14).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(0, 1).Address & ":" & SCel.Offset(0, 4).Address)) 'average of col C-F
+        SCel.Offset(0, 15).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(0, 5).Address & ":" & SCel.Offset(0, 7).Address)) 'average of col G-I
+        SCel.Offset(0, 16).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(0, 8).Address & ":" & SCel.Offset(0, 10).Address)) 'average of col J-M
+        SCel.Offset(0, 17).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(0, 11).Address & ":" & SCel.Offset(0, 13).Address)) 'average of col C-M
+        SCel.Offset(0, 18).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(0, 1).Address & ":" & SCel.Offset(0, 13).Address)) 'average of col C-M
+        
+        
+        Debug.Print "Active Range before: " & ActiveCell.Address
+            If SCel.Value = SCel.Offset(1, 0).Value Then
+                RowCnt = RowCnt + 1
+                                                    
+            ElseIf SCel.Value <> SCel.Offset(1, 0).Value Then
+                SCel.Offset(1, 0).EntireRow.Insert
+                
+                i = i + 1
+                Debug.Print "i is: " & i
+                
+                SCel.Offset(1, 0).EntireRow.Insert
+                SCel.Offset(1, 0).Value = SCel.Value
+                SCel.Offset(1, -1).Value = SCel.Offset(0, -1).Value
+                SCel.Offset(1, 19).Value = "Total"
+                i = i + 1
+                Debug.Print "i is: " & i
+                SCel.Offset(1, 0).Activate
+                  
+                If RowCnt = 1 Then
+                    SCel.Offset(1, 0).Value = SCel.Value
+                    SCel.Offset(1, 1).Value = SCel.Offset(0, 1).Value
+                    SCel.Offset(1, 2).Value = SCel.Offset(0, 2).Value
+                    SCel.Offset(1, 3).Value = SCel.Offset(0, 3).Value
+                    SCel.Offset(1, 4).Value = SCel.Offset(0, 4).Value
+                    SCel.Offset(1, 5).Value = SCel.Offset(0, 5).Value
+                    SCel.Offset(1, 6).Value = SCel.Offset(0, 6).Value
+                    SCel.Offset(1, 7).Value = SCel.Offset(0, 7).Value
+                    SCel.Offset(1, 8).Value = SCel.Offset(0, 8).Value
+                    SCel.Offset(1, 9).Value = SCel.Offset(0, 9).Value
+                    SCel.Offset(1, 10).Value = SCel.Offset(0, 10).Value
+                    SCel.Offset(1, 11).Value = SCel.Offset(0, 11).Value
+                    SCel.Offset(1, 12).Value = SCel.Offset(0, 12).Value
+                    SCel.Offset(1, 13).Value = SCel.Offset(0, 13).Value
+                    SCel.Offset(1, 14).Value = SCel.Offset(0, 14).Value
+                    SCel.Offset(1, 15).Value = SCel.Offset(0, 15).Value
+                    SCel.Offset(1, 16).Value = SCel.Offset(0, 16).Value
+                    SCel.Offset(1, 17).Value = SCel.Offset(0, 17).Value
+                    SCel.Offset(1, 18).Value = SCel.Offset(0, 18).Value
+                 
+                    
+                ElseIf RowCnt > 1 Then
+                    
+                    SCel.Offset(1, 0).Value = SCel.Value
+                    SCel.Offset(1, 1).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 1).Address & ":" & SCel.Offset(-RowCnt + 1, 1).Address)) 'average column B for one teacher
+                    SCel.Offset(1, 2).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 2).Address & ":" & SCel.Offset(-RowCnt + 1, 2).Address)) 'average column C for one teacher
+                    SCel.Offset(1, 3).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 3).Address & ":" & SCel.Offset(-RowCnt + 1, 3).Address))  'average column D for one teacher
+                    SCel.Offset(1, 4).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 4).Address & ":" & SCel.Offset(-RowCnt + 1, 4).Address)) 'average column E for one teacher
+                    SCel.Offset(1, 5).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 5).Address & ":" & SCel.Offset(-RowCnt + 1, 5).Address)) 'average column F for one teacher
+                    SCel.Offset(1, 6).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 6).Address & ":" & SCel.Offset(-RowCnt + 1, 6).Address)) 'average column G for one teacher
+                    SCel.Offset(1, 7).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 7).Address & ":" & SCel.Offset(-RowCnt + 1, 7).Address)) 'average column H for one teacher
+                    SCel.Offset(1, 8).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 8).Address & ":" & SCel.Offset(-RowCnt + 1, 8).Address)) 'average column I for one teacher
+                    SCel.Offset(1, 9).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 9).Address & ":" & SCel.Offset(-RowCnt + 1, 9).Address)) 'average column J for one teacher
+                    SCel.Offset(1, 10).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 10).Address & ":" & SCel.Offset(-RowCnt + 1, 10).Address)) 'average column K for one teacher
+                    SCel.Offset(1, 11).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 11).Address & ":" & SCel.Offset(-RowCnt + 1, 11).Address)) 'average column L for one teacher
+                    SCel.Offset(1, 12).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 12).Address & ":" & SCel.Offset(-RowCnt + 1, 12).Address)) 'average column M for one teacher
+                    SCel.Offset(1, 13).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 13).Address & ":" & SCel.Offset(-RowCnt + 1, 13).Address)) 'average column N for one teacher
+                    SCel.Offset(1, 14).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 14).Address & ":" & SCel.Offset(-RowCnt + 1, 14).Address)) 'average column O for one teacher
+                    SCel.Offset(1, 15).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 15).Address & ":" & SCel.Offset(-RowCnt + 1, 15).Address)) 'average column P for one teacher
+                    SCel.Offset(1, 16).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 16).Address & ":" & SCel.Offset(-RowCnt + 1, 16).Address)) 'average column N for one teacher
+                    SCel.Offset(1, 17).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 17).Address & ":" & SCel.Offset(-RowCnt + 1, 17).Address)) 'average column O for one teacher
+                    SCel.Offset(1, 18).Value = Application.WorksheetFunction.Average(Range(SCel.Offset(-1, 18).Address & ":" & SCel.Offset(-RowCnt + 1, 18).Address)) 'average column P for one teacher
+                   
+                    RowCnt = 1
+                
+                End If
+                        
+                
+                    End If
+                    
+                        
+        Debug.Print "Active Range after: " & ActiveCell.Address
+        
+
+    Debug.Print i
+    Next
+
+End Sub

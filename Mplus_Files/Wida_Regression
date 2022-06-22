@@ -1,0 +1,91 @@
+TITLE: WIDA_2021_2022_Comparison
+DATA: FILE = C:\Users\!Insert File Name!.txt;
+VARIABLE: 
+        NAMES =
+        SCHOOL	GRADE  SSID     ID	    GEN	    BLACK	ASIAN	AMIN	
+        WH	    PACI    HISP	ABS	    CABS	SPED	SOCEC	HML	    
+        IMM	    MIG     YRSESL	SS22	
+        LISS22	SPSS22	RESS22	WRSS22	COMSS22	ORSS22	LITSS22	PL22	
+        LIPL22	SPPL22	REPL22	WRPL22	COMPL22	ORPL22	LITPL22	SS21	
+        LISS21	RESS21	SPSS21	WRSS21	COSS21	ORSS21	LITSS21	PL21	
+        LIPL21	REPL21	WRPL21	SPPL21	COPL21	ORPL21	LITPL21	CHSS	
+        CHLISS	CHSPSS	CHRESS	CHWRSS	CHCOSS	CHORSS	CHLITSS;
+
+
+        USEVARIABLE =
+       ! SCHOOL	
+       ! GRADE		
+       ! GEN	
+       ! BLACK	
+       ! ASIAN	
+       ! AMIN	
+       ! WH	
+       ! PACI
+       ! HISP	
+       ! ABS	
+        CABS	
+       ! SPED	
+       ! SOCEC	
+       ! HML	
+       ! IMM	
+       ! MIG	
+       ! YRSESL	
+       ! SS22	
+       ! LISS22	
+       ! SPSS22	
+       ! RESS22	
+       ! WRSS22	
+       ! COMSS22	
+       ! ORSS22	
+       ! LITSS22	
+       ! PL22	
+       ! LIPL22	
+       ! SPPL22	
+       ! REPL22	
+       ! WRPL22	
+       ! COMPL22	
+       ! ORPL22	
+       ! LITPL22	
+       ! SS21	
+       ! LISS21
+       ! RESS21	
+       ! SPSS21	
+       ! WRSS21	
+       ! COSS21	
+       ! ORSS21	
+       ! LITSS21	
+       ! PL21	
+       ! LIPL21	
+       ! REPL21	
+       ! WRPL21	
+       ! SPPL21	
+       ! COPL21	
+       ! ORPL21	
+       ! LITPL21	
+       ! CHSS	
+        CHLISS	
+        !CHSPSS	
+        !CHRESS	
+        !CHWRSS	
+        !CHCOSS	
+        !CHORSS	
+        !CHLITSS
+       ;
+
+
+
+        MISSING = ALL(999);
+        GROUPING = Grade (1=fir 2=sec 3=thir
+        4=for 5=fi 6=six 7=sev 8=eight 9=fre 10=so
+        11=jun 12=sen);
+
+
+    MODEL:
+       ! CHSS on CABS;
+        CHLISS on CABS;
+       ! CHSPSS on CABS;
+       ! CHRESS on CABS;
+       ! CHWRSS on CABS;
+       ! CHCOSS on CABS;
+       ! CHORSS on CABS;
+       ! CHLITSS on CABS;
