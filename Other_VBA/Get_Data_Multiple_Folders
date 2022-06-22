@@ -1,0 +1,249 @@
+ Option Explicit
+ 
+ Sub GetDataFromSurvey()
+  
+    Dim cn As ADODB.Connection
+    Dim RS As ADODB.Recordset
+   
+    
+    DataClean.Range("A1").CurrentRegion.Offset(1, 0).Clear
+        
+    Set cn = New ADODB.Connection
+    
+    cn.ConnectionString = _
+        "Provider=Microsoft.ACE.OLEDB.12.0;" & _
+        "Data Source=" & ThisWorkbook.path & "\Faculty_SchoolandPrincipals.xlsx;" & _
+        "Extended Properties='Excel 12.0 Xml;HDR=YES';"
+        
+    cn.Open
+    Set RS = New ADODB.Recordset
+    
+    RS.ActiveConnection = cn
+    RS.Source = "SELECT * FROM [Sheet0$]"
+    RS.Open
+    
+
+    RawDat.Range("A2").CopyFromRecordset RS
+    
+    RawDat.Range("A1").CurrentRegion.EntireColumn.AutoFit
+    
+    RS.Close
+    cn.Close
+' Call CleanData
+ 
+ End Sub
+ Sub CleanData()
+    
+   
+    Dim RawDat As Worksheet
+    Dim DataClean As Worksheet
+    Dim l As Long
+    Dim Dat As Range
+    Set RawDat = Sheets("RawDat")
+    Set DataClean = Sheets("DataClean")
+    Dim con As Long
+       RawDat.Range("R1").EntireColumn.Copy
+       DataClean.Range("A1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("S1").EntireColumn.Copy
+       DataClean.Range("B1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("T1").EntireColumn.Copy
+       DataClean.Range("C1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("U1").EntireColumn.Copy
+       DataClean.Range("D1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BD1").EntireColumn.Copy
+       DataClean.Range("E1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BE1").EntireColumn.Copy
+       DataClean.Range("F1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BF1").EntireColumn.Copy
+       DataClean.Range("G1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BG1").EntireColumn.Copy
+       DataClean.Range("H1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BH1").EntireColumn.Copy
+       DataClean.Range("I1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BI1").EntireColumn.Copy
+       DataClean.Range("J1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BJ1").EntireColumn.Copy
+       DataClean.Range("K1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BK1").EntireColumn.Copy
+       DataClean.Range("L1").EntireColumn.PasteSpecial xlPasteValues
+       RawDat.Range("BL1").EntireColumn.Copy
+       DataClean.Range("M1").EntireColumn.PasteSpecial xlPasteValues
+       DataClean.Range("A1:A2").EntireRow.Delete
+       l = DataClean.Range("A1").End(xlDown).Row
+       DataClean.Select
+       DataClean.Range("A:B").EntireColumn.Insert
+       con = 1
+       Do Until con = 4000
+            DataClean.Range("A" & con).Value = Range("C" & con) & Range("E" & con)
+            DataClean.Range("B" & con).Value = Range("D" & con) & Range("F" & con)
+            
+       con = con + 1
+       Loop
+       DataClean.Range("C1:F1").EntireColumn.Delete
+       DataClean.Range("A1:K4000").Select
+       
+       
+       
+    With Selection
+           
+     .Sort key1:=Range("B1"), Order1:=xlAscending, Header:=xlNo, Key2:=Range("A1"), Order2:=xlAscending, Header:=xlNo
+    End With
+    
+       DataClean.Range("A1").CurrentRegion.EntireColumn.AutoFit
+        
+       Dim cel As Range
+       Dim SCol As Range: Set SCol = DataClean.Range("C1:K4000")
+       For Each cel In SCol.Cells
+            If cel.Value = "" Then
+                cel.EntireRow.Delete
+            End If
+       Next cel
+
+ End Sub
+ 
+ Sub CreateSummary()
+ Dim tScores() As Variant
+ Dim Dimension1 As Long, Dimension2 As Long
+ Dim DataClean As Worksheet: Set DataClean = Sheets("DataClean")
+ Dim RS As Worksheet: Set RS = Sheets("RatingSummary")
+ Dim rc As Long
+ Dim arc As Long
+ Dim sc As Long
+ Dim r As Long
+ DataClean.Select
+ r = 4000
+ 
+rc = 1
+sc = 1
+    For rc = 1 To r
+        DataClean.Select
+        If DataClean.Range("B" & rc).Value <> DataClean.Range("B" & rc).Offset(1, 0).Value Then
+            arc = 0
+            rc = rc + 1
+             ReDim tScores(0 To arc, 0 To 10)
+                    For Dimension1 = LBound(tScores, 1) To UBound(tScores, 1)
+                        For Dimension2 = LBound(tScores, 2) To UBound(tScores, 2)
+                            tScores(Dimension1, Dimension2) = Range("A" & rc - arc).Offset(Dimension1, Dimension2).Value
+                        Next Dimension2
+                    Next Dimension1
+            RS.Activate
+            RS.Range("A" & sc).Value = tScores(0, 0)
+            RS.Range("B" & sc).Value = tScores(0, 1)
+            With Application.WorksheetFunction
+                RS.Select
+                RS.Range("C" & sc).Value = .Average(.Index(tScores(), 0, 3)) / 4
+                RS.Range("D" & sc).Value = .Average(.Index(tScores(), 0, 4)) / 3
+                RS.Range("E" & sc).Value = .Average(.Index(tScores(), 0, 5)) / 3
+                RS.Range("F" & sc).Value = .Average(.Index(tScores(), 0, 6)) / 5
+                RS.Range("G" & sc).Value = .Average(.Index(tScores(), 0, 7)) / 3
+                RS.Range("H" & sc).Value = .Average(.Index(tScores(), 0, 8)) / 4
+                RS.Range("I" & sc).Value = .Average(.Index(tScores(), 0, 9)) / 3
+                RS.Range("J" & sc).Value = .Average(.Index(tScores(), 0, 10)) / 3
+              
+                
+            End With
+        sc = sc + 1
+        arc = 0
+        ElseIf DataClean.Range("B" & rc).Value = DataClean.Range("B" & rc).Offset(1, 0).Value Then
+            Do Until DataClean.Range("B" & rc).Value <> Range("B" & rc).Offset(1, 0).Value
+                arc = arc + 1
+                rc = rc + 1
+            Loop
+                
+                ReDim tScores(0 To arc, 0 To 9)
+                    For Dimension1 = LBound(tScores, 1) To UBound(tScores, 1)
+                        For Dimension2 = LBound(tScores, 2) To UBound(tScores, 2)
+                            tScores(Dimension1, Dimension2) = Range("A" & rc - arc).Offset(Dimension1, Dimension2).Value
+                        Next Dimension2
+                    Next Dimension1
+        
+            RS.Activate
+            RS.Range("A" & sc).Value = tScores(0, 0)
+            RS.Range("B" & sc).Value = tScores(0, 1)
+            With Application.WorksheetFunction
+                RS.Range("C" & sc).Value = .Average(.Index(tScores(), 0, 3)) / 4
+                RS.Range("D" & sc).Value = .Average(.Index(tScores(), 0, 4)) / 3
+                RS.Range("E" & sc).Value = .Average(.Index(tScores(), 0, 5)) / 3
+                RS.Range("F" & sc).Value = .Average(.Index(tScores(), 0, 6)) / 5
+                RS.Range("G" & sc).Value = .Average(.Index(tScores(), 0, 7)) / 3
+                RS.Range("H" & sc).Value = .Average(.Index(tScores(), 0, 8)) / 4
+                RS.Range("I" & sc).Value = .Average(.Index(tScores(), 0, 9)) / 3
+                RS.Range("J" & sc).Value = .Average(.Index(tScores(), 0, 10)) / 3
+                
+            End With
+            sc = sc + 1
+            arc = 0
+        End If
+ Next
+       
+ End Sub
+ 
+
+ Sub CreateReport()
+  Dim ChartBase As Worksheet: Set ChartBase = Sheets("ChartBase")
+  Dim FinalPrint As Worksheet: Set FinalPrint = Sheets("FinalPrint")
+  Dim RatingSummary As Worksheet: Set RatingSummary = Sheets("RatingSummary")
+        ChartBase.Cells.Clear
+        ChartBase.Range("A1") = "Overall"
+        ChartBase.Range("A2") = "Student Engagment"
+        ChartBase.Range("A3") = "Teaching Methods: Individualized Instruction"
+        ChartBase.Range("A4") = "Teaching Methods: Expectations & Feedback"
+        ChartBase.Range("A5") = "Positive Environment: Trust"
+        ChartBase.Range("A6") = "Positive Environment: Caring"
+        ChartBase.Range("A8") = "Overall"
+        ChartBase.Range("A9") = "Communication With Parent"
+        ChartBase.Range("A10") = "Parent Trust"
+        ChartBase.Range("A11") = "Involving Parents in Student Growth"
+    ChartBase.Range("A13") = "School Name"
+    ChartBase.Range("A14") = "Teacher Name"
+    ChartBase.Range("A15") = "Teacher ID"
+    Call PopulateRatings
+End Sub
+Sub PopulateRatings()
+    Dim RatingSummary As Worksheet: Set RatingSummary = Sheets("RatingSummary")
+    Dim r As Integer
+    Dim n As Integer
+      
+    n = Range("A1", Range("A1").End(xlDown)).Rows.Count
+    
+    RatingSummary.Select
+    r = 2
+    
+    For r = 2 To n
+        
+        Range("H" & r).Copy ChartBase.Range("B1")
+        Range("G" & r).Copy ChartBase.Range("B2")
+        Range("F" & r).Copy ChartBase.Range("B3")
+        Range("E" & r).Copy ChartBase.Range("B4")
+        Range("D" & r).Copy ChartBase.Range("B5")
+        Range("C" & r).Copy ChartBase.Range("B6")
+        Range("A" & r).Copy ChartBase.Range("B13")
+        Range("B" & r).Copy ChartBase.Range("B14")
+        
+   
+   
+   Call PR
+   Next
+  
+        
+ End Sub
+
+
+Sub PR()
+  Dim report As Worksheet
+  Dim path  As String
+  Dim filename As String
+  
+  Set report = Sheets("FinalPrint")
+  path = ThisWorkbook.path & Application.PathSeparator & report.Range("b4").Value
+  filename = report.Range("f10").Value & "_" & report.Range("b5").Value & ".pdf"
+    ' make folder
+    On Error Resume Next
+      MkDir path
+    On Error GoTo 0
+    
+    report.ExportAsFixedFormat Type:=xlTypePDF, filename:=path & Application.PathSeparator & filename, Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
+
+End Sub
+
+ 
